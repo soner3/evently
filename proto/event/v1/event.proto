@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+package event.v1;
+
+service EventService {
+    rpc CreateEvent (CreateEventRequest) returns (CreateEventResponse){
+        option (google.api.http) = {
+            post: "/v1/event"
+            body: "*"
+        };
+    };
+}
+
+message CreateEventRequest{
+    string name = 1 [
+        (buf.validate.field).string = {
+            min_len: 1,
+            max_len: 255
+        }
+    ];
+    string description = 2[
+        (buf.validate.field).string = {
+            min_len: 1
+            max_len: 1000
+        }
+    ];
+    string location = 3[
+        (buf.validate.field).string = {
+            min_len: 1,
+            max_len: 255
+        }
+    ];
+    google.protobuf.Timestamp date_time = 4[
+        (buf.validate.field).required = true
+    ];
+}
+
+message CreateEventResponse{
+    string event_id = 1;
+    string name = 2;
+    string description = 3;
+    string location = 4;
+    google.protobuf.Timestamp date_time = 5;
+    string user_id = 6;
+}
