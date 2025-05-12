@@ -15,10 +15,10 @@ type Event struct {
 	UserId      uuid.UUID
 }
 
+var Events = make(map[string]Event)
+
 func NewEvent(name, description, location string, dateTime time.Time) *Event {
 	return &Event{
-		EventId:     uuid.New(),
-		UserId:      uuid.New(),
 		Name:        name,
 		Description: description,
 		Location:    location,

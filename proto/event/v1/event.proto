@@ -13,6 +13,28 @@ service EventService {
             body: "*"
         };
     };
+    rpc UpdateEvent (UpdateEventRequest) returns (UpdateEventResponse){
+        option (google.api.http) = {
+            put: "/v1/event/{event_id}"
+            body: "*"
+        };
+    };
+    rpc DeleteEvent (DeleteEventRequest) returns (DeleteEventResponse){
+        option (google.api.http) = {
+            delete: "/v1/event/{event_id}"
+        };
+    };
+    rpc GetEvent (GetEventRequest) returns (GetEventResponse){
+        option (google.api.http) = {
+            get: "/v1/event/{event_id}"
+        };
+    };
+    rpc GetAllEvents (GetAllEventsRequest) returns (GetAllEventsResponse){
+        option (google.api.http) = {
+            get: "/v1/event"
+        };
+    };
+
 }
 
 message CreateEventRequest{
@@ -46,4 +68,85 @@ message CreateEventResponse{
     string location = 4;
     google.protobuf.Timestamp date_time = 5;
     string user_id = 6;
+}
+
+message UpdateEventRequest{
+    string event_id = 1[
+        (buf.validate.field).string.uuid = true
+    ];
+    string name = 2[
+        (buf.validate.field).string = {
+            min_len: 1,
+            max_len: 255
+        }
+    ];
+    string description = 3[
+        (buf.validate.field).string = {
+            min_len: 1
+            max_len: 1000
+        }
+    ];
+    string location = 4[
+        (buf.validate.field).string = {
+            min_len: 1,
+            max_len: 255
+        }
+    ];
+    google.protobuf.Timestamp date_time = 5[
+        (buf.validate.field).required = true
+    ];
+    string user_id = 6[
+        (buf.validate.field).string.uuid = true
+    ];
+}
+
+message UpdateEventResponse{
+    string event_id = 1;
+    string name = 2;
+    string description = 3;
+    string location = 4;
+    google.protobuf.Timestamp date_time = 5;
+    string user_id = 6;
+}
+
+message DeleteEventRequest{
+    string event_id = 1[
+        (buf.validate.field).string.uuid = true
+    ];
+}
+
+message DeleteEventResponse{
+    string message = 1;
+}
+
+message GetEventRequest{
+    string event_id = 1[
+        (buf.validate.field).string.uuid = true
+    ];
+}
+
+message GetEventResponse{
+    string event_id = 1;
+    string name = 2;
+    string description = 3;
+    string location = 4;
+    google.protobuf.Timestamp date_time = 5;
+    string user_id = 6;
+}
+
+message GetAllEventsRequest{
+
+}
+
+message Event {
+    string event_id = 1;
+    string name = 2;
+    string description = 3;
+    string location = 4;
+    google.protobuf.Timestamp date_time = 5;
+    string user_id = 6;
+}
+
+message GetAllEventsResponse{
+    repeated Event events = 1;
 }
