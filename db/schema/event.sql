@@ -4,5 +4,7 @@ CREATE TABLE IF NOT EXISTS event(
     name VARCHAR(255) NOT NULL,
     description TEXT,
     location VARCHAR(255),
-    date_time DATETIME NOT NULL
+    date_time DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+        ON DELETE CASCADE
 );

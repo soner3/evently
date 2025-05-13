@@ -19,15 +19,6 @@ type Event struct {
 	UserId      uuid.UUID
 }
 
-func NewEvent(name, description, location string, dateTime time.Time) *Event {
-	return &Event{
-		Name:        name,
-		Description: description,
-		Location:    location,
-		DateTime:    dateTime,
-	}
-}
-
 func (e *Event) Save() error {
 	ctx := context.Background()
 	exists, err := db.Queries.EventExistsById(ctx, e.EventId[:])

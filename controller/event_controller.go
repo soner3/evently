@@ -16,7 +16,12 @@ type EventController struct {
 }
 
 func (e *EventController) CreateEvent(_ context.Context, req *eventv1.CreateEventRequest) (*eventv1.CreateEventResponse, error) {
-	event := model.NewEvent(req.GetName(), req.GetDescription(), req.GetLocation(), req.GetDateTime().AsTime())
+	event := model.Event{
+		Name:        req.GetName(),
+		Description: req.GetDescription(),
+		Location:    req.GetLocation(),
+		DateTime:    req.GetDateTime().AsTime(),
+	}
 	if err := event.Save(); err != nil {
 		return nil, status.Errorf(codes.Internal, "Could not save event: %v", err)
 	}
