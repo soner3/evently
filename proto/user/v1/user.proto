@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "event/v1/event.proto";
+
+package user.v1;
+
+service UserService{
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse){
+        option (google.api.http) = {
+            post: "/v1/user"
+            body: "*"
+        };
+    };
+    rpc GetUser (GetUserRequest) returns (GetUserResponse){
+        option (google.api.http) = {
+            get: "/v1/user"
+        };
+    };
+
+    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse){
+        option (google.api.http) = {
+            delete: "/v1/user"
+        };
+    }
+    
+}
+
+message CreateUserRequest{
+    string email = 1[
+        (buf.validate.field).string = {
+            min_len: 1,
+            max_len: 255,
+            email: true
+        }
+    ];
+    string password = 2[
+        (buf.validate.field).string = {
+            min_len: 1,
+            max_len: 255
+        }
+    ];
+}
+
+message CreateUserResponse{
+    string user_id = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message GetUserRequest{
+    
+}
+
+message GetUserResponse{
+    string user_id = 1;
+    string email = 2;
+    string password = 3;
+    repeated event.v1.Event events = 4;
+}
+
+message DeleteUserRequest{
+
+}
+
+message DeleteUserResponse{
+    string message = 1;
+}

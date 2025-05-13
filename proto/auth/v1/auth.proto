@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+
+package auth.v1;
+
+service AuthService{
+    rpc Login (LoginRequest) returns (LoginResponse){
+        option (google.api.http) = {
+            post: "/v1/auth/login"
+            body: "*"
+        };
+    };
+}
+
+message LoginRequest{
+     string email = 1[
+        (buf.validate.field).string = {
+            min_len: 1,
+            max_len: 255,
+            email: true
+        }
+    ];
+    string password = 2[
+        (buf.validate.field).string = {
+            min_len: 1,
+            max_len: 255
+        }
+    ];
+}
+
+message LoginResponse{
+    string access_token = 1;
+}
