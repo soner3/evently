@@ -6,6 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/soner3/evently/model"
 	eventv1 "github.com/soner3/evently/proto/gen/event/v1"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -15,9 +17,9 @@ type EventController struct {
 
 func (e *EventController) CreateEvent(_ context.Context, req *eventv1.CreateEventRequest) (*eventv1.CreateEventResponse, error) {
 	event := model.NewEvent(req.GetName(), req.GetDescription(), req.GetLocation(), req.GetDateTime().AsTime())
-	event.EventId = uuid.New()
-	event.UserId = uuid.New()
-	model.Events[event.EventId.String()] = *event
+	if err := event.Save(); err != nil {
+		return nil, status.Errorf(codes.Internal, "Could not save event: %v", err)
+	}
 	return &eventv1.CreateEventResponse{
 		EventId:     event.EventId.String(),
 		Name:        event.Name,
@@ -29,31 +31,44 @@ func (e *EventController) CreateEvent(_ context.Context, req *eventv1.CreateEven
 }
 
 func (e *EventController) DeleteEvent(ctx context.Context, req *eventv1.DeleteEventRequest) (*eventv1.DeleteEventResponse, error) {
-	delete(model.Events, req.GetEventId())
+	event := model.Event{}
+	event.EventId = uuid.MustParse(req.GetEventId())
+	if err := event.DeleteById(); err != nil {
+		return nil, status.Errorf(codes.Internal, "Could not delete event: %v", err)
+	}
 	return &eventv1.DeleteEventResponse{
 		Message: "Deleted",
 	}, nil
 }
 
 func (e *EventController) GetAllEvents(ctx context.Context, req *eventv1.GetAllEventsRequest) (*eventv1.GetAllEventsResponse, error) {
-	events := make([]*eventv1.Event, 0, len(model.Events))
-	for _, e := range model.Events {
-		events = append(events, &eventv1.Event{
+	eventModel := model.Event{}
+	events, err := eventModel.ListEvents()
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "Could not list events: %v", err)
+	}
+	resEvents := make([]*eventv1.Event, len(*events))
+	for i, e := range *events {
+		resEvents[i] = &eventv1.Event{
 			EventId:     e.EventId.String(),
 			Name:        e.Name,
 			Description: e.Description,
 			Location:    e.Location,
 			DateTime:    timestamppb.New(e.DateTime),
 			UserId:      e.UserId.String(),
-		})
+		}
 	}
 	return &eventv1.GetAllEventsResponse{
-		Events: events,
+		Events: resEvents,
 	}, nil
 }
 
 func (e *EventController) GetEvent(ctx context.Context, req *eventv1.GetEventRequest) (*eventv1.GetEventResponse, error) {
-	event := model.Events[req.GetEventId()]
+	eventModel := model.Event{}
+	event, err := eventModel.FindById(uuid.MustParse(req.GetEventId()))
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "no event found: %v", err)
+	}
 	return &eventv1.GetEventResponse{
 		EventId:     event.EventId.String(),
 		Name:        event.Name,
@@ -66,13 +81,16 @@ func (e *EventController) GetEvent(ctx context.Context, req *eventv1.GetEventReq
 }
 
 func (e *EventController) UpdateEvent(ctx context.Context, req *eventv1.UpdateEventRequest) (*eventv1.UpdateEventResponse, error) {
-	event := model.Events[req.GetEventId()]
+	event := model.Event{}
+	event.EventId = uuid.MustParse(req.GetEventId())
 	event.Name = req.GetName()
 	event.Description = req.GetDescription()
 	event.Location = req.GetDescription()
 	event.DateTime = req.GetDateTime().AsTime()
 	event.UserId = uuid.MustParse(req.GetUserId())
-	model.Events[event.EventId.String()] = event
+	if err := event.Save(); err != nil {
+		return nil, status.Errorf(codes.Internal, "Could not save event: %v", err)
+	}
 
 	return &eventv1.UpdateEventResponse{
 		EventId:     event.EventId.String(),

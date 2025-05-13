@@ -9,6 +9,7 @@ import (
 	"buf.build/go/protovalidate"
 	protovalidate_middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/protovalidate"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/soner3/evently/db"
 	"github.com/soner3/evently/routes"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -16,7 +17,10 @@ import (
 )
 
 func main() {
+	db.InitDB()
+
 	endpoint := "localhost:50051"
+
 	go runGrpcServer(endpoint)
 
 	ctx := context.Background()
