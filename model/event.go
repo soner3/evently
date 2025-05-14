@@ -16,7 +16,7 @@ type Event struct {
 	Description string
 	Location    string
 	DateTime    time.Time
-	UserId      uuid.UUID
+	User        User
 }
 
 func (e *Event) Save() error {
@@ -36,14 +36,14 @@ func (e *Event) Save() error {
 		})
 	}
 	e.EventId = uuid.New()
-	e.UserId = uuid.New()
+	e.User.UserId = uuid.New()
 	return db.Queries.CreateEvent(ctx, sqlc.CreateEventParams{
 		EventID:     e.EventId[:],
 		Name:        e.Name,
 		Description: sql.NullString{String: e.Description, Valid: true},
 		Location:    sql.NullString{String: e.Location, Valid: true},
 		DateTime:    e.DateTime,
-		UserID:      e.UserId[:],
+		UserID:      e.User.UserId[:],
 	})
 }
 
@@ -59,7 +59,7 @@ func (Event) FindById(eventId uuid.UUID) (*Event, error) {
 		Description: event.Description.String,
 		Location:    event.Location.String,
 		DateTime:    event.DateTime,
-		UserId:      uuid.UUID(event.UserID),
+		User:        User{UserId: uuid.UUID(event.UserID)},
 	}, nil
 
 }
@@ -78,7 +78,7 @@ func (Event) ListEvents() (*[]Event, error) {
 			Description: e.Description.String,
 			Location:    e.Location.String,
 			DateTime:    e.DateTime,
-			UserId:      uuid.UUID(e.UserID),
+			User:        User{UserId: uuid.UUID(e.UserID)},
 		}
 	}
 

@@ -17,3 +17,9 @@ type Event struct {
 	Location    sql.NullString
 	DateTime    time.Time
 }
+
+type User struct {
+	UserID   []byte
+	Email    string
+	Password string
+}

@@ -46,7 +46,6 @@ message CreateUserRequest{
 message CreateUserResponse{
     string user_id = 1;
     string email = 2;
-    string password = 3;
 }
 
 message GetUserRequest{
@@ -56,8 +55,7 @@ message GetUserRequest{
 message GetUserResponse{
     string user_id = 1;
     string email = 2;
-    string password = 3;
-    repeated event.v1.Event events = 4;
+    repeated event.v1.Event events = 3;
 }
 
 message DeleteUserRequest{

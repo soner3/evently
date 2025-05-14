@@ -31,7 +31,7 @@ func (e *EventController) CreateEvent(_ context.Context, req *eventv1.CreateEven
 		Description: event.Description,
 		Location:    event.Location,
 		DateTime:    timestamppb.New(event.DateTime),
-		UserId:      event.UserId.String(),
+		UserId:      event.User.UserId.String(),
 	}, nil
 }
 
@@ -60,7 +60,7 @@ func (e *EventController) GetAllEvents(ctx context.Context, req *eventv1.GetAllE
 			Description: e.Description,
 			Location:    e.Location,
 			DateTime:    timestamppb.New(e.DateTime),
-			UserId:      e.UserId.String(),
+			UserId:      e.User.UserId.String(),
 		}
 	}
 	return &eventv1.GetAllEventsResponse{
@@ -80,7 +80,7 @@ func (e *EventController) GetEvent(ctx context.Context, req *eventv1.GetEventReq
 		Description: event.Description,
 		Location:    event.Location,
 		DateTime:    timestamppb.New(event.DateTime),
-		UserId:      event.UserId.String(),
+		UserId:      event.User.UserId.String(),
 	}, nil
 
 }
@@ -92,7 +92,7 @@ func (e *EventController) UpdateEvent(ctx context.Context, req *eventv1.UpdateEv
 	event.Description = req.GetDescription()
 	event.Location = req.GetDescription()
 	event.DateTime = req.GetDateTime().AsTime()
-	event.UserId = uuid.MustParse(req.GetUserId())
+	event.User.UserId = uuid.MustParse(req.GetUserId())
 	if err := event.Save(); err != nil {
 		return nil, status.Errorf(codes.Internal, "Could not save event: %v", err)
 	}
@@ -103,7 +103,7 @@ func (e *EventController) UpdateEvent(ctx context.Context, req *eventv1.UpdateEv
 		Description: event.Description,
 		Location:    event.Location,
 		DateTime:    timestamppb.New(event.DateTime),
-		UserId:      event.UserId.String(),
+		UserId:      event.User.UserId.String(),
 	}, nil
 
 }

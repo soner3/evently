@@ -80,7 +80,6 @@ type CreateUserResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -129,13 +128,6 @@ func (x *CreateUserResponse) GetEmail() string {
 	return ""
 }
 
-func (x *CreateUserResponse) GetPassword() string {
-	if x != nil {
-		return x.Password
-	}
-	return ""
-}
-
 type GetUserRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -176,8 +168,7 @@ type GetUserResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	Password      string                 `protobuf:"bytes,3,opt,name=password,proto3" json:"password,omitempty"`
-	Events        []*v1.Event            `protobuf:"bytes,4,rep,name=events,proto3" json:"events,omitempty"`
+	Events        []*v1.Event            `protobuf:"bytes,3,rep,name=events,proto3" json:"events,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -222,13 +213,6 @@ func (x *GetUserResponse) GetUserId() string {
 func (x *GetUserResponse) GetEmail() string {
 	if x != nil {
 		return x.Email
-	}
-	return ""
-}
-
-func (x *GetUserResponse) GetPassword() string {
-	if x != nil {
-		return x.Password
 	}
 	return ""
 }
@@ -328,17 +312,15 @@ const file_user_v1_user_proto_rawDesc = "" +
 	"\x11CreateUserRequest\x12\"\n" +
 	"\x05email\x18\x01 \x01(\tB\f\xbaH\tr\a\x10\x01\x18\xff\x01`\x01R\x05email\x12&\n" +
 	"\bpassword\x18\x02 \x01(\tB\n" +
-	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\bpassword\"_\n" +
+	"\xbaH\ar\x05\x10\x01\x18\xff\x01R\bpassword\"C\n" +
 	"\x12CreateUserResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x03 \x01(\tR\bpassword\"\x10\n" +
-	"\x0eGetUserRequest\"\x85\x01\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\"\x10\n" +
+	"\x0eGetUserRequest\"i\n" +
 	"\x0fGetUserResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x03 \x01(\tR\bpassword\x12'\n" +
-	"\x06events\x18\x04 \x03(\v2\x0f.event.v1.EventR\x06events\"\x13\n" +
+	"\x05email\x18\x02 \x01(\tR\x05email\x12'\n" +
+	"\x06events\x18\x03 \x03(\v2\x0f.event.v1.EventR\x06events\"\x13\n" +
 	"\x11DeleteUserRequest\".\n" +
 	"\x12DeleteUserResponse\x12\x18\n" +
 	"\amessage\x18\x01 \x01(\tR\amessage2\x92\x02\n" +

@@ -1,10 +1,3 @@
--- name: ListUsers :many
-SELECT 
-    * 
-FROM 
-    user 
-LIMIT 10;
-
 -- name: FindUserById :one
 SELECT
     *
@@ -13,6 +6,19 @@ FROM
 WHERE
     user_id = ?
 LIMIT 1;
+
+-- name: FindUserByIdWithReferences :many
+SELECT
+    u.*,
+    e.*
+FROM
+    user u
+LEFT JOIN
+    event e
+ON u.user_id = e.user_id
+WHERE
+    1 = 1
+    AND u.user_id = ?;
 
 -- name: FindUserByEmail :one
 SELECT
@@ -32,24 +38,13 @@ INSERT INTO user (
     ?, ?, ?
 );
 
--- name: UpdateUserById :exec
-UPDATE user
-SET
-    email = ?,
-    password = ?
-WHERE
-    user_id = ?;
-
 -- name: DeleteUserById :exec
 DELETE FROM user
 WHERE user_id = ?;
-
--- name: UserExistsById :one
-SELECT EXISTS (
-    SELECT 1 FROM user WHERE user_id = ?
-);
 
 -- name: UserExistsByEmail :one
 SELECT EXISTS (
     SELECT 1 FROM user WHERE email = ?
 );
+
+
