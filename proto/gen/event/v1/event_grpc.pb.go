@@ -19,11 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	EventService_CreateEvent_FullMethodName  = "/event.v1.EventService/CreateEvent"
-	EventService_UpdateEvent_FullMethodName  = "/event.v1.EventService/UpdateEvent"
-	EventService_DeleteEvent_FullMethodName  = "/event.v1.EventService/DeleteEvent"
-	EventService_GetEvent_FullMethodName     = "/event.v1.EventService/GetEvent"
-	EventService_GetAllEvents_FullMethodName = "/event.v1.EventService/GetAllEvents"
+	EventService_CreateEvent_FullMethodName = "/event.v1.EventService/CreateEvent"
+	EventService_UpdateEvent_FullMethodName = "/event.v1.EventService/UpdateEvent"
+	EventService_DeleteEvent_FullMethodName = "/event.v1.EventService/DeleteEvent"
+	EventService_GetEvent_FullMethodName    = "/event.v1.EventService/GetEvent"
 )
 
 // EventServiceClient is the client API for EventService service.
@@ -34,7 +33,6 @@ type EventServiceClient interface {
 	UpdateEvent(ctx context.Context, in *UpdateEventRequest, opts ...grpc.CallOption) (*UpdateEventResponse, error)
 	DeleteEvent(ctx context.Context, in *DeleteEventRequest, opts ...grpc.CallOption) (*DeleteEventResponse, error)
 	GetEvent(ctx context.Context, in *GetEventRequest, opts ...grpc.CallOption) (*GetEventResponse, error)
-	GetAllEvents(ctx context.Context, in *GetAllEventsRequest, opts ...grpc.CallOption) (*GetAllEventsResponse, error)
 }
 
 type eventServiceClient struct {
@@ -85,16 +83,6 @@ func (c *eventServiceClient) GetEvent(ctx context.Context, in *GetEventRequest, 
 	return out, nil
 }
 
-func (c *eventServiceClient) GetAllEvents(ctx context.Context, in *GetAllEventsRequest, opts ...grpc.CallOption) (*GetAllEventsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAllEventsResponse)
-	err := c.cc.Invoke(ctx, EventService_GetAllEvents_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // EventServiceServer is the server API for EventService service.
 // All implementations must embed UnimplementedEventServiceServer
 // for forward compatibility.
@@ -103,7 +91,6 @@ type EventServiceServer interface {
 	UpdateEvent(context.Context, *UpdateEventRequest) (*UpdateEventResponse, error)
 	DeleteEvent(context.Context, *DeleteEventRequest) (*DeleteEventResponse, error)
 	GetEvent(context.Context, *GetEventRequest) (*GetEventResponse, error)
-	GetAllEvents(context.Context, *GetAllEventsRequest) (*GetAllEventsResponse, error)
 	mustEmbedUnimplementedEventServiceServer()
 }
 
@@ -125,9 +112,6 @@ func (UnimplementedEventServiceServer) DeleteEvent(context.Context, *DeleteEvent
 }
 func (UnimplementedEventServiceServer) GetEvent(context.Context, *GetEventRequest) (*GetEventResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEvent not implemented")
-}
-func (UnimplementedEventServiceServer) GetAllEvents(context.Context, *GetAllEventsRequest) (*GetAllEventsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllEvents not implemented")
 }
 func (UnimplementedEventServiceServer) mustEmbedUnimplementedEventServiceServer() {}
 func (UnimplementedEventServiceServer) testEmbeddedByValue()                      {}
@@ -222,24 +206,6 @@ func _EventService_GetEvent_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _EventService_GetAllEvents_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllEventsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(EventServiceServer).GetAllEvents(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: EventService_GetAllEvents_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EventServiceServer).GetAllEvents(ctx, req.(*GetAllEventsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // EventService_ServiceDesc is the grpc.ServiceDesc for EventService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -262,10 +228,6 @@ var EventService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetEvent",
 			Handler:    _EventService_GetEvent_Handler,
-		},
-		{
-			MethodName: "GetAllEvents",
-			Handler:    _EventService_GetAllEvents_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

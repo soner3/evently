@@ -36,7 +36,6 @@ func (e *Event) Save() error {
 		})
 	}
 	e.EventId = uuid.New()
-	e.User.UserId = uuid.New()
 	return db.Queries.CreateEvent(ctx, sqlc.CreateEventParams{
 		EventID:     e.EventId[:],
 		Name:        e.Name,

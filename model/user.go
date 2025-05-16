@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"errors"
+	"log"
 
 	"github.com/google/uuid"
 	"github.com/soner3/evently/db"
@@ -57,9 +58,10 @@ func (u *User) DeleteUserById() error {
 }
 
 func (u *User) FindUserByIdWithEvents() error {
+	log.Println("Repo User Id:", u.UserId[:])
 	rows, err := db.Queries.FindUserByIdWithReferences(context.Background(), u.UserId[:])
 	if err != nil {
-		return nil
+		return err
 	}
 
 	u.Email = rows[0].Email
@@ -67,8 +69,14 @@ func (u *User) FindUserByIdWithEvents() error {
 	events := make([]Event, len(rows))
 
 	for _, r := range rows {
+		if !r.EventID.Valid {
+			continue
+		}
+
+		log.Println(r.EventID.String)
+
 		events = append(events, Event{
-			EventId:     uuid.MustParse(r.EventID.String),
+			EventId:     uuid.Must(uuid.FromBytes([]byte(r.EventID.String))),
 			Name:        r.Name.String,
 			Description: r.Description.String,
 			Location:    r.Location.String,

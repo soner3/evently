@@ -37,26 +37,6 @@
           "UserService"
         ]
       },
-      "delete": {
-        "operationId": "UserService_DeleteUser",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1DeleteUserResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "UserService"
-        ]
-      },
       "post": {
         "operationId": "UserService_CreateUser",
         "responses": {
@@ -136,14 +116,6 @@
           "type": "string"
         },
         "email": {
-          "type": "string"
-        }
-      }
-    },
-    "v1DeleteUserResponse": {
-      "type": "object",
-      "properties": {
-        "message": {
           "type": "string"
         }
       }

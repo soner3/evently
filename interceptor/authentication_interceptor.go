@@ -2,12 +2,10 @@ package interceptor
 
 import (
 	"context"
-	"errors"
 
 	"github.com/soner3/evently/util"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -16,7 +14,7 @@ func AuthenticationInterceptor() grpc.UnaryServerInterceptor {
 		if ShouldNotFilter(info.FullMethod) {
 			return handler(ctx, req)
 		}
-		err = checkAuth(ctx)
+		err = checkAuth(&ctx)
 		if err != nil {
 			return nil, status.Errorf(codes.Unauthenticated, "User Unauthorized: %v", err)
 		}
@@ -24,16 +22,12 @@ func AuthenticationInterceptor() grpc.UnaryServerInterceptor {
 	}
 }
 
-func checkAuth(ctx context.Context) error {
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return errors.New("no metadata found")
+func checkAuth(ctx *context.Context) error {
+	token, err := util.ExtractTokenFromHeader(ctx)
+	if err != nil {
+		return err
 	}
-	token := md.Get("authorization")
-	if len(token) < 1 {
-		return errors.New("empty token")
-	}
-	_, _, err := util.ValidateToken(token[0])
+	_, _, err = util.ValidateToken(*token)
 	if err != nil {
 		return err
 	}
@@ -50,4 +44,18 @@ func ShouldNotFilter(method string) bool {
 	default:
 		return false
 	}
+}
+
+func GetSubFromToken(ctx *context.Context) (string, error) {
+	token, err := util.ExtractTokenFromHeader(ctx)
+	if err != nil {
+		return "", err
+	}
+	_, claims, err := util.ValidateToken(*token)
+	if err != nil {
+		return "", err
+	}
+
+	return claims.Subject, nil
+
 }

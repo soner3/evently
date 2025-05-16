@@ -29,11 +29,6 @@ service EventService {
             get: "/v1/event/{event_id}"
         };
     };
-    rpc GetAllEvents (GetAllEventsRequest) returns (GetAllEventsResponse){
-        option (google.api.http) = {
-            get: "/v1/event"
-        };
-    };
 
 }
 
@@ -95,9 +90,6 @@ message UpdateEventRequest{
     google.protobuf.Timestamp date_time = 5[
         (buf.validate.field).required = true
     ];
-    string user_id = 6[
-        (buf.validate.field).string.uuid = true
-    ];
 }
 
 message UpdateEventResponse{
@@ -134,10 +126,6 @@ message GetEventResponse{
     string user_id = 6;
 }
 
-message GetAllEventsRequest{
-
-}
-
 message Event {
     string event_id = 1;
     string name = 2;
@@ -145,8 +133,4 @@ message Event {
     string location = 4;
     google.protobuf.Timestamp date_time = 5;
     string user_id = 6;
-}
-
-message GetAllEventsResponse{
-    repeated Event events = 1;
 }

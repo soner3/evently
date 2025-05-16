@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/soner3/evently/model"
 	eventv1 "github.com/soner3/evently/proto/gen/event/v1"
+	"github.com/soner3/evently/util"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -15,12 +16,17 @@ type EventController struct {
 	eventv1.UnimplementedEventServiceServer
 }
 
-func (e *EventController) CreateEvent(_ context.Context, req *eventv1.CreateEventRequest) (*eventv1.CreateEventResponse, error) {
+func (e *EventController) CreateEvent(ctx context.Context, req *eventv1.CreateEventRequest) (*eventv1.CreateEventResponse, error) {
+	token, _ := util.ExtractTokenFromHeader(&ctx)
+	_, claims, _ := util.ValidateToken(*token)
+	userId := claims.Subject
+
 	event := model.Event{
 		Name:        req.GetName(),
 		Description: req.GetDescription(),
 		Location:    req.GetLocation(),
 		DateTime:    req.GetDateTime().AsTime(),
+		User:        model.User{UserId: uuid.MustParse(userId)},
 	}
 	if err := event.Save(); err != nil {
 		return nil, status.Errorf(codes.Internal, "Could not save event: %v", err)
@@ -46,28 +52,6 @@ func (e *EventController) DeleteEvent(ctx context.Context, req *eventv1.DeleteEv
 	}, nil
 }
 
-func (e *EventController) GetAllEvents(ctx context.Context, req *eventv1.GetAllEventsRequest) (*eventv1.GetAllEventsResponse, error) {
-	eventModel := model.Event{}
-	events, err := eventModel.ListEvents()
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Could not list events: %v", err)
-	}
-	resEvents := make([]*eventv1.Event, len(*events))
-	for i, e := range *events {
-		resEvents[i] = &eventv1.Event{
-			EventId:     e.EventId.String(),
-			Name:        e.Name,
-			Description: e.Description,
-			Location:    e.Location,
-			DateTime:    timestamppb.New(e.DateTime),
-			UserId:      e.User.UserId.String(),
-		}
-	}
-	return &eventv1.GetAllEventsResponse{
-		Events: resEvents,
-	}, nil
-}
-
 func (e *EventController) GetEvent(ctx context.Context, req *eventv1.GetEventRequest) (*eventv1.GetEventResponse, error) {
 	eventModel := model.Event{}
 	event, err := eventModel.FindById(uuid.MustParse(req.GetEventId()))
@@ -86,13 +70,17 @@ func (e *EventController) GetEvent(ctx context.Context, req *eventv1.GetEventReq
 }
 
 func (e *EventController) UpdateEvent(ctx context.Context, req *eventv1.UpdateEventRequest) (*eventv1.UpdateEventResponse, error) {
+	token, _ := util.ExtractTokenFromHeader(&ctx)
+	_, claims, _ := util.ValidateToken(*token)
+	userId := claims.Subject
+
 	event := model.Event{}
 	event.EventId = uuid.MustParse(req.GetEventId())
 	event.Name = req.GetName()
 	event.Description = req.GetDescription()
 	event.Location = req.GetDescription()
 	event.DateTime = req.GetDateTime().AsTime()
-	event.User.UserId = uuid.MustParse(req.GetUserId())
+	event.User.UserId = uuid.MustParse(userId)
 	if err := event.Save(); err != nil {
 		return nil, status.Errorf(codes.Internal, "Could not save event: %v", err)
 	}

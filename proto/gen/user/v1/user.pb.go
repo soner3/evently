@@ -224,86 +224,6 @@ func (x *GetUserResponse) GetEvents() []*v1.Event {
 	return nil
 }
 
-type DeleteUserRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteUserRequest) Reset() {
-	*x = DeleteUserRequest{}
-	mi := &file_user_v1_user_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteUserRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteUserRequest) ProtoMessage() {}
-
-func (x *DeleteUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_user_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteUserRequest.ProtoReflect.Descriptor instead.
-func (*DeleteUserRequest) Descriptor() ([]byte, []int) {
-	return file_user_v1_user_proto_rawDescGZIP(), []int{4}
-}
-
-type DeleteUserResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Message       string                 `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteUserResponse) Reset() {
-	*x = DeleteUserResponse{}
-	mi := &file_user_v1_user_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteUserResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteUserResponse) ProtoMessage() {}
-
-func (x *DeleteUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_v1_user_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteUserResponse.ProtoReflect.Descriptor instead.
-func (*DeleteUserResponse) Descriptor() ([]byte, []int) {
-	return file_user_v1_user_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *DeleteUserResponse) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
 var File_user_v1_user_proto protoreflect.FileDescriptor
 
 const file_user_v1_user_proto_rawDesc = "" +
@@ -320,18 +240,12 @@ const file_user_v1_user_proto_rawDesc = "" +
 	"\x0fGetUserResponse\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x14\n" +
 	"\x05email\x18\x02 \x01(\tR\x05email\x12'\n" +
-	"\x06events\x18\x03 \x03(\v2\x0f.event.v1.EventR\x06events\"\x13\n" +
-	"\x11DeleteUserRequest\".\n" +
-	"\x12DeleteUserResponse\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage2\x92\x02\n" +
+	"\x06events\x18\x03 \x03(\v2\x0f.event.v1.EventR\x06events2\xb9\x01\n" +
 	"\vUserService\x12Z\n" +
 	"\n" +
 	"CreateUser\x12\x1a.user.v1.CreateUserRequest\x1a\x1b.user.v1.CreateUserResponse\"\x13\x82\xd3\xe4\x93\x02\r:\x01*\"\b/v1/user\x12N\n" +
 	"\aGetUser\x12\x17.user.v1.GetUserRequest\x1a\x18.user.v1.GetUserResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
-	"\x12\b/v1/user\x12W\n" +
-	"\n" +
-	"DeleteUser\x12\x1a.user.v1.DeleteUserRequest\x1a\x1b.user.v1.DeleteUserResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
-	"*\b/v1/userB\x89\x01\n" +
+	"\x12\b/v1/userB\x89\x01\n" +
 	"\vcom.user.v1B\tUserProtoP\x01Z2github.com/soner3/evently/proto/gen/user/v1;userv1\xa2\x02\x03UXX\xaa\x02\aUser.V1\xca\x02\aUser\\V1\xe2\x02\x13User\\V1\\GPBMetadata\xea\x02\bUser::V1b\x06proto3"
 
 var (
@@ -346,26 +260,22 @@ func file_user_v1_user_proto_rawDescGZIP() []byte {
 	return file_user_v1_user_proto_rawDescData
 }
 
-var file_user_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_user_v1_user_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_user_v1_user_proto_goTypes = []any{
 	(*CreateUserRequest)(nil),  // 0: user.v1.CreateUserRequest
 	(*CreateUserResponse)(nil), // 1: user.v1.CreateUserResponse
 	(*GetUserRequest)(nil),     // 2: user.v1.GetUserRequest
 	(*GetUserResponse)(nil),    // 3: user.v1.GetUserResponse
-	(*DeleteUserRequest)(nil),  // 4: user.v1.DeleteUserRequest
-	(*DeleteUserResponse)(nil), // 5: user.v1.DeleteUserResponse
-	(*v1.Event)(nil),           // 6: event.v1.Event
+	(*v1.Event)(nil),           // 4: event.v1.Event
 }
 var file_user_v1_user_proto_depIdxs = []int32{
-	6, // 0: user.v1.GetUserResponse.events:type_name -> event.v1.Event
+	4, // 0: user.v1.GetUserResponse.events:type_name -> event.v1.Event
 	0, // 1: user.v1.UserService.CreateUser:input_type -> user.v1.CreateUserRequest
 	2, // 2: user.v1.UserService.GetUser:input_type -> user.v1.GetUserRequest
-	4, // 3: user.v1.UserService.DeleteUser:input_type -> user.v1.DeleteUserRequest
-	1, // 4: user.v1.UserService.CreateUser:output_type -> user.v1.CreateUserResponse
-	3, // 5: user.v1.UserService.GetUser:output_type -> user.v1.GetUserResponse
-	5, // 6: user.v1.UserService.DeleteUser:output_type -> user.v1.DeleteUserResponse
-	4, // [4:7] is the sub-list for method output_type
-	1, // [1:4] is the sub-list for method input_type
+	1, // 3: user.v1.UserService.CreateUser:output_type -> user.v1.CreateUserResponse
+	3, // 4: user.v1.UserService.GetUser:output_type -> user.v1.GetUserResponse
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
 	1, // [1:1] is the sub-list for extension extendee
 	0, // [0:1] is the sub-list for field type_name
@@ -382,7 +292,7 @@ func file_user_v1_user_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_user_v1_user_proto_rawDesc), len(file_user_v1_user_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   6,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -17,26 +17,6 @@
   ],
   "paths": {
     "/v1/event": {
-      "get": {
-        "operationId": "EventService_GetAllEvents",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1GetAllEventsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "tags": [
-          "EventService"
-        ]
-      },
       "post": {
         "operationId": "EventService_CreateEvent",
         "responses": {
@@ -179,9 +159,6 @@
         "dateTime": {
           "type": "string",
           "format": "date-time"
-        },
-        "userId": {
-          "type": "string"
         }
       }
     },
@@ -260,42 +237,6 @@
       "properties": {
         "message": {
           "type": "string"
-        }
-      }
-    },
-    "v1Event": {
-      "type": "object",
-      "properties": {
-        "eventId": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "description": {
-          "type": "string"
-        },
-        "location": {
-          "type": "string"
-        },
-        "dateTime": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "userId": {
-          "type": "string"
-        }
-      }
-    },
-    "v1GetAllEventsResponse": {
-      "type": "object",
-      "properties": {
-        "events": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1Event"
-          }
         }
       }
     },
