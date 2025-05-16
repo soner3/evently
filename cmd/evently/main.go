@@ -10,6 +10,7 @@ import (
 	protovalidate_middleware "github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/protovalidate"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/soner3/evently/db"
+	"github.com/soner3/evently/interceptor"
 	"github.com/soner3/evently/routes"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -52,7 +53,10 @@ func runGrpcServer(endpoint string) {
 		log.Fatalln("Could not create interceptor:", err)
 	}
 
-	grpcServer := grpc.NewServer(grpc.UnaryInterceptor(protovalidate_middleware.UnaryServerInterceptor(validator)))
+	grpcServer := grpc.NewServer(grpc.ChainUnaryInterceptor(
+		interceptor.AuthenticationInterceptor(),
+		protovalidate_middleware.UnaryServerInterceptor(validator),
+	))
 	routes.InitGrpcRoutes(grpcServer)
 
 	// Only in dev mode
